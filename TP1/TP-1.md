@@ -72,17 +72,64 @@ Durée approximative des boucles en millisecondes :
 Déterminer...
 
 - à quelle adresse IP correspond le nom de domaine `www.ynov.com`
+
+```
+PS C:\Users\lebou> nslookup www.ynov.com
+Serveur :   lanspeedtest.wifirst.fr
+Address:  10.188.0.1
+
+Réponse ne faisant pas autorité :
+Nom :    www.ynov.com
+Addresses:  2606:4700:20::681a:ae9
+          2606:4700:20::681a:be9
+          2606:4700:20::ac43:4ae2
+          172.67.74.226
+          104.26.10.233
+          104.26.11.233
+```
+
 - à quel nom de domaine correspond l'IP `174.43.238.89`
 
+```
+PS C:\Users\lebou> nslookup 174.43.238.89
+Serveur :   lanspeedtest.wifirst.fr
+Address:  10.188.0.1
+
+Nom :    89.sub-174-43-238.myvzw.com
+Address:  174.43.238.89
+```
 
 - par combien de machines vos paquets passent quand vous essayez de joindre `www.ynov.com`
+
+``
+
+PS C:\Users\lebou> tracert -4 www.ynov.com
+
+Détermination de l’itinéraire vers www.ynov.com [104.26.11.233]
+avec un maximum de 30 sauts :
+
+  1     2 ms     1 ms     1 ms  lanspeedtest.wifirst.fr [10.188.0.1]
+  2     *        2 ms     1 ms  172.22.6.1
+  3    26 ms    18 ms    20 ms  bs-co-01-pareq2-inet.core.wifirst.net [46.193.247.168]
+  4    25 ms    20 ms    22 ms  equinix-paris.core.wifirst.net [195.42.144.142]
+  5    21 ms    20 ms    20 ms  equinix-paris.cloudflare.com [195.42.144.143]
+  6    22 ms    19 ms    20 ms  172.71.120.4
+  7    21 ms    19 ms    22 ms  104.26.11.233
+
+Itinéraire déterminé.
 
 
 - l'adresse IP publique de la passerelle du réseau (le routeur d'YNOV donc si vous êtes dans les locaux d'YNOV quand vous faites le TP)
 
+```
+PS C:\Users\lebou> nslookup myip.opendns.com resolver1.opendns.com
+Serveur :   dns.opendns.com
+Address:  208.67.222.222
 
-- combien il y a de machines dans le LAN auquel vous êtes connectés
-
+Réponse ne faisant pas autorité :
+Nom :    myip.opendns.com
+Address:  4195.7.117.146
+```
 
 
 
@@ -99,9 +146,7 @@ En utiliant le filtre 'dns':
 [Lien vers capture DNS](./Capture/dns.pcap)
 
 - vous effectuerez la requête DNS en ligne de commande
-```
 
-```
 
 - effectuez une connexion qui sollicite le protocole TCP
 - je veux voir dans la capture :

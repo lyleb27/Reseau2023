@@ -1,27 +1,16 @@
 import socket
-import sys
 
-# On définit la destination de la connexion
-host = '10.2.3.3'  # IP du serveur
-port = 13337  # Port choisir par le serveur
+def connect(ip, port=13337):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((ip, port))
+            print(f"Connecté avec succès au serveur {ip} sur le port {port}")
+            s.send(input("Que veux-tu envoyer au serveur : ").encode())
+            print(s.recv(1024).decode())
+    except socket.error:
+        print("La connexion a échoué")
+    except Exception as e:
+        print(f"Une erreur s'est produite: {e}")
 
-# Création de l'objet socket de type TCP (SOCK_STREAM)
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Connexion au serveur
-s.connect((host, port))
-
-# Envoi de data bidon
-s.sendall('Meooooo !'.encode('utf-8'))
-
-# On reçoit 1024 bytes qui contiennent peut-être une réponse du serveur
-data = s.recv(1024).decode('utf-8')
-
-# On libère le socket TCP
-s.close()
-
-# Affichage de la réponse reçue du serveur
-print(f"Le serveur a répondu {repr(data)}")
-
-# Quitte proprement avec un code de retour 0
-sys.exit(0)
+if __name__ == '__main__':
+    connect('10.2.3.3')
