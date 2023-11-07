@@ -20,7 +20,7 @@ b'Hi mate !'
 Données reçues du client : Meooooo !
 ```
 
-Client : [bs_client_I1.py](/TP4/bs_client_I1.py)
+Client : [bs_client_I1.py](/TP4/py/bs_client_I1.py)
 ```
 [lebou@TP4client ~]$ python bs_client_I1.py
 Le serveur a répondu 'Salut mec.'
@@ -32,7 +32,7 @@ tcp   TIME-WAIT 0      0                                        10.2.3.4:40398  
 ```
 ### 2. User friendly
 
-🌞 [bs_client_I2.py](/TP4/bs_client_I2.py)
+🌞 [bs_client_I2.py](/TP4/py/bs_client_I2.py)
 
 ```
 [lebou@TP4client ~]$ python bs_client_I1.py
@@ -45,7 +45,7 @@ Que veux-tu envoyer au serveur : waf
 Réponse du serveur : ptdr t ki
 ```
 
-🌞 [bs_server_I2.py](/TP4/bs_server_I2.py)
+🌞 [bs_server_I2.py](/TP4/py/bs_server_I2.py)
 
 ```
 [lebou@TP4server ~]$ python bs_server_I1.py
@@ -56,7 +56,7 @@ Données reçues du client : waf
 ```
 
 ### 3. You say client I hear control
-🌞 [bs_client_I3.py](/TP4/bs_client_I3.py)
+🌞 [bs_client_I3.py](/TP4/py/bs_client_I3.py)
 
 ```
 
@@ -65,7 +65,7 @@ Données reçues du client : waf
 ## II. You say dev I say good practices
 ### 1. Args
 
-🌞 [bs_server_II1.py](/TP4/bs_server_II1.py)
+🌞 [bs_server_II1.py](/TP4/py/bs_server_II1.py)
 
 ```
 [lebou@TP4server ~]$ python bs_server_II1.py -p 8888
@@ -86,7 +86,7 @@ optional arguments:
 
 ### 2. Logs
 
-🌞 [bs_server_II2A.py](/TP4/bs_server_II2A.py)
+🌞 [bs_server_II2A.py](/TP4/py/bs_server_II2A.py)
 
 Pour créer le fichier bs_server.log :
 ```
@@ -98,7 +98,7 @@ Pour créer le fichier bs_server.log :
 
 ### B. Logs client
 
-🌞 [bs_client_II2B.py](/TP4/bs_client_II2B.py)
+🌞 [bs_client_II2B.py](/TP4/py/bs_client_II2B.py)
 
 ```
 
