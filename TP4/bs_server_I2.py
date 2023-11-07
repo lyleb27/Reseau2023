@@ -1,30 +1,36 @@
 import socket
-import sys
-from time import sleep
 
-def listen(ip='10.2.3.3', port=13337):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((ip, port))
-    s.listen(1)
-    conn, addr = s.accept()
-    while True:
-        try:
-            print(f"Un client vient de se co et son IP c'est {addr}")
-            response = conn.recv(1024).decode()
-            if "meo" in response:
-                conn.send("Meo à toi confrère.".encode())
-            elif "waf" in response:
-                conn.send("ptdr t ki".encode())
-            else:
-                conn.send("Mes respects humble humain.".encode())
-            sys.stdout.flush()
-        except KeyboardInterrupt:
-            conn.close()
-            s.close()
-        except BrokenPipeError:
-            break
-    
-if __name__ == '__main__':
-    while True:
-        listen('localhost')
-        sleep(1)
+IP_SERVER = "10.2.3.3"
+PORT = 13337
+
+def handle_message(client_socket, client_address, message):
+    print(f"Message reçu de {client_address}: {message}")
+
+    if "meo" in message:
+        response = "Meo à toi confrère."
+    elif "waf" in message:
+        response = "ptdr t ki"
+    else:
+        response = "Mes respects humble humain."
+
+    client_socket.send(response.encode())
+
+def main():
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((IP_SERVER, PORT))
+    server_socket.listen(5)
+    print(f"Le serveur est à l'écoute sur {IP_SERVER}:{PORT}")
+
+    response_count = 0
+    while response_count < 3:
+        client_socket, client_address = server_socket.accept()
+        print(f"Un client vient de se co et son IP c'est {client_address[0]}.")
+
+        message = client_socket.recv(1024).decode()
+        handle_message(client_socket, client_address, message)
+        client_socket.close()
+        response_count += 1
+
+if __name__ == "__main__":
+    main()
+

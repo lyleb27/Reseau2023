@@ -1,16 +1,37 @@
 import socket
 
-def connect(ip, port=13337):
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((ip, port))
-            print(f"Connecté avec succès au serveur {ip} sur le port {port}")
-            s.send(input("Que veux-tu envoyer au serveur : ").encode())
-            print(s.recv(1024).decode())
-    except socket.error:
-        print("La connexion a échoué")
-    except Exception as e:
-        print(f"Une erreur s'est produite: {e}")
+host = '10.2.3.3'
+port = 13337
 
-if __name__ == '__main__':
-    connect('10.2.3.3')
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((host, port))  
+
+s.listen(1)
+conn, addr = s.accept()
+print(f"Un client vient de se co et son IP c'est {addr}.")
+
+while True:
+
+    try:
+        data = conn.recv(1024).decode('utf-8')
+        
+        if not data: break
+        
+        print(f"Données reçues du client : {data}")
+
+        message = "Will be send to the client"
+        if "meo" in data :
+            message = "Meo à toi confrère."
+        elif "waf" in data :
+            message = "ptdr t ki"
+        else :
+            message = "Mes respects humble humain."
+        conn.sendall(message.encode('utf-8'))
+    except socket.error:
+        print("Error Occured.")
+        break
+
+conn.close()
+
+
