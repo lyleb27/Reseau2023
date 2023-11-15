@@ -1,32 +1,33 @@
 import socket
+import sys
 import re
- 
+
 host = '10.2.3.3'
 port = 13337
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-try:
-    s.connect((host, port))
-    print(f"Connecté avec succès au serveur {host} sur le port {port}")
-except TypeError:
-    print("Sa marche pô, déso.")
-    exit(2)
-
-message = input("Que veux-tu envoyer au serveur : ")
-
-if type(message) is not str :
-    s.close()
-    raise TypeError("Dialecte primaire non compris.")
+s.connect((host, port))
+texte = input("Veuillez saisir une chaîne de caractères : ")
+if type(texte) is str:
+    try:
+        s.sendall(texte.encode())
+        data = s.recv(1024)
+        print(f"Connecté avec succès au serveur {host} sur le port {port}")
         
- 
-if not re.match(r"^(?!(?=.*waf)(?=.*meo)).*$", message):
-    s.close()
-    raise ValueError("Suspicion de tentative d'infiltration.")
-    
-s.sendall(message.encode('utf-8'))
+        if not isinstance(texte, str):
+            raise TypeError("L'entrée n'est pas une chaîne de caractères")
+        if not re.search(r"(waf|meo)", texte):
+            raise ValueError("La chaîne saisie ne contient ni 'waf' ni 'meo'")
+    except TypeError as e:
+        print(f"Erreur : {e}")
+    except ValueError as e:
+        print(f"Erreur : {e}")
+    except socket.error:
+        print("Error Occured.")
+        sys.exit(1)
 
-data = s.recv(1024).decode('utf-8')
 
-print(f"Le serveur a répondu {repr(data)}")
-s.close()
+print(f"Le serveur a répondu {repr(data.decode())}")
+sys.exit(0)
+

@@ -1,39 +1,61 @@
-import logging
 import socket
+import sys
 import time
+import argparse
+from src.logs import Logger
 
-logging.basicConfig(filename='/var/log/bs_server/bs_server.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(message)s')
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-console.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
-logging.getLogger('').addHandler(console)
+def listen(ip, port=13337, timeout=60):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((ip, port))
+    s.listen(1)
+    s.setblocking(0) 
+    logger.info(f"Le serveur tourne sur {ip}:{port}")
+    start_time = time.time()
+    while True:
+        try:
+            conn, addr = s.accept()
+            logger.info(f"Un client {addr} s'est connecté.")
+            response = conn.recv(1024).decode()
+            if response != "":
+                logger.info(f"Le client {addr} a envoyé {response}")
+                if "meo" in response:
+                    conn.send("Meo à toi confrère.".encode())
+                    logger.info(f"Réponse envoyée au client {addr} : Meo à toi confrère.")
+                elif "waf" in response:
+                    conn.send("ptdr t ki".encode())
+                    logger.info(f"Réponse envoyée au client {addr} : ptdr t ki")
+                else:
+                    conn.send("Mes respects humble humain.".encode())
+                    logger.info(f"Réponse envoyée au client {addr} : Mes respects humble humain.")
+            conn.close()
+            start_time = time.time()
+        except socket.error as e:
+            if e.errno == 11:
+                pass
+            else:
+                raise
+        except KeyboardInterrupt:
+            s.close()
+            logger.info("Le serveur a été arrêté.")
+            exit(0)
+        if time.time() - start_time > timeout:
+            logger.warning(f"Aucun client depuis plus de {timeout} secondes.")
+            start_time = time.time()
 
-def log_server_start(ip, port):
-    logging.info(f"Le serveur tourne sur {ip}:{port}")
+def parseArgs():
+    parser = argparse.ArgumentParser(description="Serveur de la partie II du TP4")
+    parser.add_argument('-p', '--port', type=int, default=13337, help="Port d'écoute du serveur entre 1024 et 65535 (13337 par défaut)")
+    return parser.parse_args()
 
-def log_client_connect(client_ip):
-    logging.info(f"Un client {client_ip} s'est connecté.")
-
-def log_received_message(client_ip, message):
-    logging.info(f"Le client {client_ip} a envoyé : {message}.")
-
-def log_sent_message(client_ip, message):
-    logging.info(f"Réponse envoyée au client {client_ip} : {message}.")
-
-def log_no_clients_connected():
-    logging.warning("Aucun client depuis plus d'une minute.")
-
-def main():
-    host = '10.2.3.3'
-    port = 13337
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((host, port))
-    server_socket.listen(5)
-
-    log_server_start(host, port)
-
-    # Code du serveur
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    logger = Logger("/var/log/bs_server/bs_server.log")
+    args = parseArgs()
+    if args.port < 0 or args.port > 65535:
+        if args.port < 1024:
+            logger.critical("ERROR Le port spécifié est un port privilégié. Spécifiez un port au-dessus de 1024.")
+            exit(2)
+        else:
+            logger.critical("ERROR Le port spécifié n'est pas un port possible (de 0 à 65535).")
+            exit(1)
+    listen('10.2.3.3', args.port, 60)

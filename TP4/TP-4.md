@@ -28,7 +28,7 @@ Le serveur a répondu 'Salut mec.'
 
 ```
 [lebou@TP4client ~]$ ss -a | grep -i 13337
-tcp   TIME-WAIT 0      0                                        10.2.3.4:40398                  10.2.3.3:13337
+tcp   TIME-WAIT 0      0                                       10.2.3.4:40398                  10.2.3.3:13337
 ```
 ### 2. User friendly
 
@@ -58,9 +58,6 @@ Données reçues du client : waf
 ### 3. You say client I hear control
 🌞 [bs_client_I3.py](/TP4/py/bs_client_I3.py)
 
-```
-
-```
 
 ## II. You say dev I say good practices
 ### 1. Args
@@ -100,6 +97,3 @@ Pour créer le fichier bs_server.log :
 
 🌞 [bs_client_II2B.py](/TP4/py/bs_client_II2B.py)
 
-```
-
-```
