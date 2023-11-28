@@ -2,6 +2,7 @@
 
 ## I. Jouer avec l'encodage
 CLIENT :
+
 import socket
 import struct
 
@@ -20,7 +21,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
     print(f"Nombre {number_to_send} envoyé au serveur")
 
 
-SERVER :
+SERVER : 
+
 import socket
 import struct
 
