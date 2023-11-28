@@ -1,23 +1,31 @@
 import socket
-import struct
 
-host = 'localhost'
-port = 12345
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind(('127.0.0.1', 9999))  
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-    server_socket.bind((host, port))
-    
-    server_socket.listen()
+s.listen(1)
+conn, addr = s.accept()
 
-    print(f"Le serveur écoute sur {host}:{port}")
+while True:
 
-    conn, addr = server_socket.accept()
-    with conn:
-        print(f"Connecté par {addr}")
+    try:
+        # On reçoit la string Hello du client
+        data = conn.recv(1024)
+        if not data: break
+        print(f"Données reçues du client : {data}")
 
-        data = conn.recv(4)  # Nous recevons 4 octets pour représenter l'entier (32 bits)
-        if not data:
-            print("Aucune donnée reçue")
-        else:
-            number = struct.unpack('!I', data)[0]
-            print(f"Nombre reçu : {number}")
+        conn.send("Hello".encode())
+
+        # On reçoit le calcul du client
+        data = conn.recv(1024)
+
+        # Evaluation et envoi du résultat
+        res  = eval(data.decode())
+        conn.send(str(res).encode())
+         
+    except socket.error:
+        print("Error Occured.")
+        break
+
+conn.close()

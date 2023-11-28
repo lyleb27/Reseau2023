@@ -1,16 +1,19 @@
 import socket
-import struct
 
-host = 'localhost'
-port = 12345
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(('127.0.0.1', 9999))
+s.send('Hello'.encode())
 
-number_to_send = 100000
+# On reçoit la string Hello
+data = s.recv(1024)
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-    client_socket.connect((host, port))
+# Récupération d'une string utilisateur
+msg = input("Calcul à envoyer: ")
 
-    data_to_send = struct.pack('!I', number_to_send)
+# On envoie
+s.send(msg.encode())
 
-    client_socket.sendall(data_to_send)
-
-    print(f"Nombre {number_to_send} envoyé au serveur")
+# Réception et affichage du résultat
+s_data = s.recv(1024)
+print(s_data.decode())
+s.close()

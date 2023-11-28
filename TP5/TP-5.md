@@ -2,7 +2,7 @@
 
 ## I. Jouer avec l'encodage
 CLIENT :
-
+```
 import socket
 import struct
 
@@ -19,10 +19,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
     client_socket.sendall(data_to_send)
 
     print(f"Nombre {number_to_send} envoyé au serveur")
-
+```
 
 SERVER : 
-
+```
 import socket
 import struct
 
@@ -40,16 +40,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
     with conn:
         print(f"Connecté par {addr}")
 
-        data = conn.recv(4)  # Nous recevons 4 octets pour représenter l'entier (32 bits)
+        data = conn.recv(4)
         if not data:
             print("Aucune donnée reçue")
         else:
             number = struct.unpack('!I', data)[0]
             print(f"Nombre reçu : {number}")
-
+```
 
 ## II. Opti calculatrice
+### 1. Strings sur mesure
 
 
 
+## III. Serveur Web et HTTP
 
