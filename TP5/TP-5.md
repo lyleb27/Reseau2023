@@ -50,8 +50,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
 ## II. Opti calculatrice
 ### 1. Strings sur mesure
+[tp5_enc_client_1.py](/TP5/tp5_enc_client_1.py)
 
+[tp5_enc_server_1.py](/TP5/tp5_enc_server_1.py)
 
+### 2. Code Encode Decode
+[tp5_enc_server_2.py](/TP5/tp5_enc_server_2.py)
+Pas fini
 
+[tp5_enc_client_2.py](/TP5/tp5_enc_client_2.py)
+Pas fini
 ## III. Serveur Web et HTTP
 
