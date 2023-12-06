@@ -10,5 +10,7 @@
 [🌞 web_async.py](web_async.py)
 
 [🌞 web_sync_multiple.py](web_sync_multiple.py)
+Total execution time: 15.95 seconds
 
 [🌞 web_async_multiple.py](web_async_multiple.py)
+Total execution time: 2.70 seconds
