@@ -4,22 +4,21 @@ async def handle_client(reader, writer):
     addr = writer.get_extra_info('peername')
     print(f"Received connection from {addr}")
 
-    # Send a greeting to the client
     writer.write(f"Hello {addr[0]}:{addr[1]}".encode())
     await writer.drain()
 
-    # Wait for data from the client
-    data = await reader.read(100)
-    message = data.decode()
-    print(f"Received message from {addr}: {message}")
-
-    # Respond to the client
-    response = f"Received your message: {message}"
-    writer.write(response.encode())
-    await writer.drain()
-
-    print(f"Closing connection from {addr}")
-    writer.close()
+    try:
+        while True:
+            data = await reader.read(1024)
+            if not data:
+                break
+            message = data.decode()
+            print(f"Message received from {addr[0]}:{addr[1]}: {message}")
+    except asyncio.CancelledError:
+        pass
+    finally:
+        print(f"Closing connection from {addr}")
+        writer.close()
 
 async def main():
     server = await asyncio.start_server(
