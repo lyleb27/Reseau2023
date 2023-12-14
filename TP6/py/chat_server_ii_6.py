@@ -1,54 +1,66 @@
 import asyncio
 
+host = '127.0.0.1'
+port = 8889
+global CLIENTS
 CLIENTS = {}
 
-async def handle_client(reader, writer):
+
+async def handle_client_msg(reader, writer):
     addr = writer.get_extra_info('peername')
+    print(f"New client: {addr[0]}:{addr[1]}")
 
+    data = await reader.read(1024)
+    message = data.decode()
+
+    pseudo = message.split("|")[1]
+    print(f"{addr[0]}:{addr[1]} has chosen the pseudo {pseudo}")
     if addr not in CLIENTS:
-        data = await reader.read(1024)
-        message = data.decode()
-        if message.startswith("Hello|"):
-            pseudo = message.split("|")[1]
-            print(f"\033[92mAnnonce\033[0m : {pseudo} a rejoint la chatroom")
-            CLIENTS[addr] = {}
-            CLIENTS[addr]["r"] = reader
-            CLIENTS[addr]["w"] = writer
-            CLIENTS[addr]["pseudo"] = pseudo
-
-            announcement = (f"\033[92mAnnonce\033[0m : {pseudo} a rejoint la chatroom")
-            for client_addr, client_data in CLIENTS.items():
-                if client_addr != addr:
-                    client_data["w"].write(announcement.encode())
-                    await client_data["w"].drain()
+        CLIENTS[addr] = {}
+        CLIENTS[addr]["r"] = reader
+        CLIENTS[addr]["w"] = writer
+        CLIENTS[addr]["pseudo"] = pseudo
+        await announce(f"{pseudo} has joined the chatroom")
 
     while True:
         data = await reader.read(1024)
-        if not data:
+        if data == b'':
             break
 
-        message = data.decode()
-        if message == "":
-            break  # Le client s'est déconnecté
-        print(f"\033[94mMessage\033[0m reçu de {pseudo} : {message}")
-        for client_addr, client_data in CLIENTS.items():
-            if client_addr != addr:
-                pseudo = client_data["pseudo"]
-                response_message = f"{pseudo} a dit : {message}"
-                client_data["w"].write(response_message.encode())
-                await client_data["w"].drain()
+        msg = data.decode()
+        sender_pseudo = CLIENTS[addr]["pseudo"]
+        formatted_msg = f"{sender_pseudo}: {msg}"
+        print(formatted_msg)
 
-    print(f"\033[91mAnnonce :\033[0m {pseudo} a quitté la chatroom")
-    del CLIENTS[addr]
+        for client_addr, client_info in CLIENTS.items():
+            if client_addr != addr:
+                client_info["w"].write(formatted_msg.encode())
+                await client_info["w"].drain()
+
+        if addr in CLIENTS and "saluted" not in CLIENTS[addr]:
+            await writer.drain()
+            CLIENTS[addr]["saluted"] = True
+
+    print(f"Connection with {pseudo} closed")
+    writer.close()
+
+
+async def announce(announcement):
+    for client_addr, client_info in CLIENTS.items():
+        announcement = f"{announcement}"
+        client_info["w"].write(f"Announcement: {announcement}".encode())
+        await client_info["w"].drain()
+
 
 async def main():
-    server = await asyncio.start_server(handle_client, '127.0.0.1', 8889)
-
-    addr = server.sockets[0].getsockname()
-    print(f'Serveur en attente de connexions sur {addr}')
+    server = await asyncio.start_server(handle_client_msg, host, port)
+    addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
+    print(f'Serving on {addrs}')
 
     async with server:
         await server.serve_forever()
 
+
 if __name__ == "__main__":
+
     asyncio.run(main())
