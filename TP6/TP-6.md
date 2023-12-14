@@ -38,3 +38,9 @@ Total execution time: 2.70 seconds
 [🌞 chat_server_ii_6.py](/TP6/py/chat_server_ii_6.py)
 
 [🌞 chat_client_ii_6.py](/TP6/py/chat_client_ii_6.py)
+
+## III. Bonus
+### 4. Encodage maison
+[server_bonus_encodage](/TP6/py/encodage_server.py)
+
+[client_bonus_encodage](/TP6/py/encodage_client.py)
