@@ -10,21 +10,18 @@ DB_FILE = '/var/ids/db.json'
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def build():
-    "Construit un fichier JSON qui contient un état des choses à surveiller."
     data = {}
 
     file_path = '/var/ids/db.json'
     file_hash = hash_file(file_path)
     data[file_path] = file_hash
 
-    # Enregistrement dans le fichier JSON
     with open(DB_FILE, 'w') as json_file:
         json.dump(data, json_file, indent=2)
 
     logging.info('Commande build exécutée. Fichier JSON créé.')
 
 def check():
-    "Vérifie que l'état actuel est conforme à ce qui a été stocké dans le fichier JSON."
     if not os.path.exists(DB_FILE):
         logging.error(f'Le fichier {DB_FILE} n\'existe pas. Exécutez d\'abord la commande "build".')
         return
@@ -40,7 +37,6 @@ def check():
         logging.warning('{"state": "divergent", "changes": %s}', json.dumps(find_changes(expected_state, current_state)))
 
 def hash_file(file_path):
-    "Retourne le hash d'un fichier."
     hasher = hashlib.sha256()
     with open(file_path, 'rb') as file:
         while chunk := file.read(8192):
@@ -48,7 +44,6 @@ def hash_file(file_path):
     return hasher.hexdigest()
 
 def find_changes(expected_state, current_state):
-    "Retourne les changements entre l'état attendu et l'état actuel."
     changes = {}
     for file_path in expected_state.keys():
         if expected_state[file_path] != current_state[file_path]:
