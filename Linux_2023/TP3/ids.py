@@ -4,7 +4,7 @@ import hashlib
 import argparse
 import logging
 
-LOG_FILE = '/var/ids/ids.log'
+LOG_FILE = '/var/log/ids/ids.log'
 DB_FILE = '/var/ids/db.json'
 
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
