@@ -16,3 +16,6 @@
 ## II. Base de données
 ### 2. Redis
 [🌞 ws_ii_2_server.py](./py&js/ws_ii_2_server.py)
+
+### 3. Bonus : MongoDB
+[🌞 ws_ii_3_server.py](./py&js/ws_ii_3_server.py)
